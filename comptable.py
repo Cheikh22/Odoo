@@ -11,6 +11,8 @@ PROTOCOL = "jsonrpcs"
 JOURNAL_TRANSFERT = "TestComptable"
 
 POURCENTAGE_TAXE = 0.14  # La taxe est fixée à 14% de la commission
+POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR = 0.15  # La commission de l'agence partenaire recepteur
+POURCENTAGE_AGENCE_PARTENAIRE_EMETTEUR = 0.20  # La commission de l'agence partenaire emetteur
 
 
 def comtabiliser(type_transaction, id_transaction, date, libelle, montant,cout_achat=0, frais_de_depart=0,frais_versement=0, recepteurs=[]) :
@@ -49,14 +51,16 @@ def comtabiliser(type_transaction, id_transaction, date, libelle, montant,cout_a
     value = type_transaction
     taxe = frais_de_depart*POURCENTAGE_TAXE
     commission = frais_de_depart-taxe
-    commission_partenaire=0
+    commission_partenaire_recepteur=0
 
     if value == '01':
         transaction = ecriture_comptable_1_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '02.1':
         transaction = ecriture_comptable_2_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '02.2':
-        transaction = ecriture_comptable_2_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire)
+        commission_partenaire_recepteur = frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_recepteur
+        transaction = ecriture_comptable_2_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_recepteur)
     elif value == '03.1':
         transaction = ecriture_comptable_3_1(account_model, id_transaction, date, journal, libelle, montant,frais_versement)
     elif value == '03.2':
@@ -64,19 +68,30 @@ def comtabiliser(type_transaction, id_transaction, date, libelle, montant,cout_a
     elif value == '04.1':
         transaction = ecriture_comptable_4_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '04.2':
-        transaction = ecriture_comptable_4_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe,commission_partenaire)
+        commission_partenaire_recepteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_recepteur
+        transaction = ecriture_comptable_4_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_recepteur)
     elif value == '04.3':
-        transaction = ecriture_comptable_4_3(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
+        commission_partenaire_emetteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_EMETTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_emetteur
+        transaction = ecriture_comptable_4_3(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_emetteur)
     elif value == '04.4':
-        transaction = ecriture_comptable_4_4(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
+        commission_partenaire_recepteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR
+        commission_partenaire_emetteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_EMETTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_emetteur-commission_partenaire_recepteur
+        transaction = ecriture_comptable_4_4(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_recepteur, commission_partenaire_emetteur)
     elif value == '05.1':
         transaction = ecriture_comptable_5_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '05.2':
-        transaction = ecriture_comptable_5_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
+        commission_partenaire_recepteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_recepteur
+        transaction = ecriture_comptable_5_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_recepteur)
     elif value == '06.1':
         transaction = ecriture_comptable_6_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '06.2':
-        transaction = ecriture_comptable_6_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
+        commission_partenaire_recepteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_RECEPTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_recepteur
+        transaction = ecriture_comptable_6_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_recepteur)
     elif value == '07.1':
         transaction = ecriture_comptable_7_1(account_model, id_transaction, date, journal, libelle, montant)
     elif value == '07.2':
@@ -114,7 +129,9 @@ def comtabiliser(type_transaction, id_transaction, date, libelle, montant,cout_a
     elif value == '17.1':
         transaction = ecriture_comptable_17_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '17.2':
-        transaction = ecriture_comptable_17_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
+        commission_partenaire_emetteur  =frais_de_depart*POURCENTAGE_AGENCE_PARTENAIRE_EMETTEUR
+        commission = frais_de_depart-taxe-commission_partenaire_emetteur
+        transaction = ecriture_comptable_17_2(account_model, id_transaction, date, journal, libelle, montant, commission, taxe, commission_partenaire_emetteur)
     elif value == '18':
         transaction = ecriture_comptable_18_1(account_model, id_transaction, date, journal, libelle, montant, commission, taxe)
     elif value == '19':

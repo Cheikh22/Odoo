@@ -342,7 +342,7 @@ input_26_1 = {
     "frais_de_depart": 50
 }
 
-comtabiliser(**input_1_1)
+# comtabiliser(**input_1_1)
 # comtabiliser(**input_2_1)
 # comtabiliser(**input_2_2)
 # comtabiliser(**input_3_1)
